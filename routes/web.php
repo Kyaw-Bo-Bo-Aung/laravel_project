@@ -25,12 +25,16 @@ Route::middleware('role:admin')->group(function () {
 	Route:: resource('items', 'ItemController');
 });
 
+
+
 	Route:: get('/', 'FrontendController@index')->name('mainpage');
 	Route::get('shoppingcart', 'FrontendController@cart')->name('shoppingcart');
 	Route::get('loginpage', 'FrontendController@login')->name('loginpage');
 	Route::get('registerpage', 'FrontendController@register')->name('registerpage');
 	Route::get('orderhistory', 'FrontendController@orderhistory')->name('orderhistory');
 	Route::get('categoriespage/{id}', 'FrontendController@categories')->name('categoriespage');
+	Route:: resource('orders', 'OrderController');
+
 
 
 

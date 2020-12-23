@@ -4,6 +4,7 @@
 	<title>Ecommerce</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<link rel="stylesheet" type="text/css" href="{{asset("access/css/mycss/bootstrap.min.css")}}">
 	<link rel="stylesheet" type="text/css" href="{{asset("access/css/mycss/style.css")}}">
 	<link rel="stylesheet" type="text/css" href="{{asset("access/fontawesome/css/all.min.css")}}">
@@ -62,6 +63,7 @@
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                             @csrf
                         </form>
+                        <a href="{{ route('orderhistory') }}" class="dropdown-item">Order history</a>
                     </div>
                 </li>
 				@endif
@@ -233,7 +235,6 @@
 	<script type="text/javascript" src="{{asset('access/js/myjs/jquery.js')}}"></script>
 	<script type="text/javascript" src="{{asset('access/js/myjs/script.js')}}"></script>
 	<script type="text/javascript" src="{{asset('access/js/myjs/bootstrap.bundle.min.js')}}"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 	<script type="text/javascript">
 		// cartBtn

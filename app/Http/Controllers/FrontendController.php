@@ -7,6 +7,9 @@ use App\Category;
 use App\Subcategory;
 use App\Brand;
 use App\Item;
+use App\Order;
+use Auth;
+
 
 class FrontendController extends Controller
 {
@@ -31,7 +34,10 @@ class FrontendController extends Controller
 	}
 
 	public function orderhistory($value = ''){
-		return view('frontend.orderhistory');
+
+   	$orders = Order::where('user_id',Auth::id())->orderBy('id','desc')->get();
+
+	return view('frontend.orderhistory',compact('orders'));
 	}
 
 	public function categories($id){

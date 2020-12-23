@@ -1,5 +1,7 @@
 
 $(document).ready(function(){
+    
+
     $('#sideBarNav').hide();
     $('#sideBarBtn').on('click',function(){
         // alert("ok");
@@ -10,10 +12,11 @@ $(document).ready(function(){
     showdata();
     cartnoti();
     costnoti();
+    // $('.cartDiv').hide();
 
 
 // discountitem
-    $(document).ready(function () {
+   
     var itemsMainDiv = ('.MultiCarousel');
     var itemsDiv = ('.MultiCarousel-inner');
     var itemWidth = "";
@@ -27,8 +30,6 @@ $(document).ready(function(){
     });
 
     ResCarouselSize();
-
-
 
 
     $(window).resize(function () {
@@ -117,8 +118,6 @@ $(document).ready(function(){
         var slide = $(Parent).attr("data-slide");
         ResCarousel(ell, Parent, slide);
     }
-
-});
 // end discountitem
 
 // brand
@@ -137,7 +136,7 @@ $('.brand-carousel').owlCarousel({
       items:5
     }
   }
-}) 
+});
 // end brand
 
 // modal
@@ -186,71 +185,77 @@ $('.brand-carousel').owlCarousel({
         };
         // console.log(item);
 
-    var storagedata = localStorage.getItem("itemlist");
-    var itemarray;
-
-    var check = false;
-    if (!storagedata) {
-        itemarray = [];
-    }else{
-    itemarray = JSON.parse(storagedata);
-    }
+        var storagedata = localStorage.getItem("itemlist");
+        var itemarray;
 
         var check = false;
-        itemarray.forEach( function(v, i) {
-            // console.log(v.id);
-            if(id == v.id){
-                v.qty++;
-                check = true;
-            }
-        });
-            if (check==false) {
-                itemarray.push(item);
-            }
+        if (!storagedata) {
+            itemarray = [];
+        }else{
+        itemarray = JSON.parse(storagedata);
+        }
 
-        var storagestring = JSON.stringify(itemarray);
-        localStorage.setItem("itemlist", storagestring);
-        showdata();
-        cartnoti();
-        costnoti();
-    })
+            var check = false;
+            itemarray.forEach( function(v, i) {
+                // console.log(v.id);
+                if(id == v.id){
+                    v.qty++;
+                    check = true;
+                }
+            });
+                if (check==false) {
+                    itemarray.push(item);
+                }
+
+            var storagestring = JSON.stringify(itemarray);
+            localStorage.setItem("itemlist", storagestring);
+            showdata();
+            cartnoti();
+            costnoti();
+        });
 // end add to cart btn
 
 // show item in table
     function showdata(){
         localdata = localStorage.getItem('itemlist');
-        itemarray = JSON.parse(localdata);
-        var html='';
-        var j = 1;
-        var subtotal = 0;
-        var total = 0
-        itemarray.forEach( function(v, i) {
-            subtotal=v.qty*v.price;
-            total+=subtotal;
-            html+=`
-                    <tr>
-                        <td><button class="btn btn-outline-danger rounded-circle delBtn" data-id="${i}"><i class="fas fa-times"></i></button></td>
-                        <td>${j++}</td>
-                        <td><img src="${v.photo}" width="150" height="150"></td>
-                        <td>${v.name}</td>
-                        <td>${v.price}</td>
-                        <td>
-                            <button class="btn btn-secondary btn-sm increaseBtn" data-id="${i}">+</button>
-                            ${v.qty}
-                            <button class="btn btn-secondary btn-sm decreaseBtn" data-id="${i}">-</button>
-                        </td>
-                        <td>${subtotal} Ks</td>
-                    </tr>
-            `
-        });
-            html+=`
-                    <tr>
-                        <td colspan="6"><h4>Total</h4></td>
-                        <td>${total} Ks</td>
-                    </tr>
-            `
+
+        if (localdata) {
+            itemarray = JSON.parse(localdata);
+            var html='';
+            var j = 1;
+            var subtotal = 0;
+            var total = 0
+            itemarray.forEach( function(v, i) {
+                subtotal=v.qty*v.price;
+                total+=subtotal;
+                html+=`
+                        <tr>
+                            <td><button class="btn btn-outline-danger rounded-circle delBtn" data-id="${i}"><i class="fas fa-times"></i></button></td>
+                            <td>${j++}</td>
+                            <td><img src="${v.photo}" width="150" height="150"></td>
+                            <td>${v.name}</td>
+                            <td>${v.price}</td>
+                            <td>
+                                <button class="btn btn-secondary btn-sm increaseBtn" data-id="${i}">+</button>
+                                ${v.qty}
+                                <button class="btn btn-secondary btn-sm decreaseBtn" data-id="${i}">-</button>
+                            </td>
+                            <td>${subtotal} Ks</td>
+                        </tr>
+                `
+            });
+                html+=`
+                        <tr>
+                            <td colspan="6"><h4>Total</h4></td>
+                            <td>${total} Ks</td>
+                        </tr>
+                `
         $('.mytbody').html(html);
-    }
+        $('.noItemDiv').hide();
+        }
+        
+
+    };
 // end show item in table
     
 // increaseBtn
@@ -303,7 +308,7 @@ $('.brand-carousel').owlCarousel({
             });
             var itemstring = JSON.stringify(itemarray);
             localStorage.setItem('itemlist', itemstring);
-            showdata();cartnoti();costnoti()
+            showdata();cartnoti();costnoti();
 
         }        
     })
@@ -361,5 +366,36 @@ $('.brand-carousel').owlCarousel({
 // end costnoti
 
 
+// ORDER PROCESS
+    $('.checkoutBtn').on('click',function(){
+        
+        $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+        });
+
+        var items = localStorage.getItem("itemlist");
+        var notes = $('.note').val();
+        var itemarr = JSON.parse(items);
+        var total = itemarr.reduce((acc,row)=>acc+(row.price*row.qty),0);
+        // console.log(total);
+        $.ajax({
+            type:'post',
+            url:"/orders" ,
+            data: {items:items,notes:notes,total:total},
+            success: function(response){
+                // console.log(response);
+                localStorage.clear();
+                $('#exampleModal').modal('show');
+            }
+        })
+    });
+
+// END ORDER PROCESS
+
+
+
 });
+
 // end ready function
