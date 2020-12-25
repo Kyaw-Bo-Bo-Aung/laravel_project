@@ -72,20 +72,17 @@
                 </div>
               </div>
               <div class="row d-print-none mt-2">
-              		<a class="btn btn-primary" href="{{route('orders.update',$order->id)}};"><i class="fa fa-print"></i> Confirm</a>
-{{-- 
-              	@if($order->status==0)
-					<div class="col-12 text-right">
-						<a class="btn btn-danger" href="" target="_blank"><i class="fa fa-print"></i> Cancel</a>
-						<a class="btn btn-primary" href="{{route('orders.update',$order->id)}};"><i class="fa fa-print"></i> Confirm</a>
-						
-					</div>
-				@elseif($order->status==1)
-					<div class="col-12 text-right"><a class="btn btn-primary" href="{{route('orders.index')}};"><i class="fa fa-print"></i> OK </a></div>
-				@elseif($order->status==2)
-					<div class="col-12 text-right"><a class="btn btn-primary" href="{{route('orders.index')}};"><i class="fa fa-print"></i> OK </a></div>
-				@endif --}}
-               
+              	@if($order->status == 0)
+              	<form action="{{route('orders.update',$order->id)}}" method="post">
+              		@csrf
+              		@method('PUT')
+              		<button class="btn btn-primary" type="submit"><i class="fa fa-print"></i> Confirm</button>
+              	</form>
+                <a href="{{route('cancel',$order->id)}}" class="btn btn-danger">Cancel</a>
+              	
+              	@elseif($order->status == 1 || $order->status == 2)
+              	<a href="{{route('orders.index')}}" class="btn btn-primary">OK</a>
+               @endif
               </div>
             </section>
           </div>

@@ -34,6 +34,7 @@ Route::middleware('role:admin')->group(function () {
 	Route::get('orderhistory', 'FrontendController@orderhistory')->name('orderhistory');
 	Route::get('categoriespage/{id}', 'FrontendController@categories')->name('categoriespage');
 	Route:: resource('orders', 'OrderController');
+	Route:: get('orders.cancel/{id}', 'OrderController@cancel')->name('cancel');
 
 
 

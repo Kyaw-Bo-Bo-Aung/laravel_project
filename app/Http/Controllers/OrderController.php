@@ -90,12 +90,12 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        // dd($request,$order);
-        $status = Order::where('id', 'order')->first();
-        if($status) {
-            $order->status = 1;
-            $order->save();
-        }
+       
+        $order->status = 1;
+        $order->save();
+
+        return redirect()->route('orders.index');
+        
     }
 
     /**
@@ -106,6 +106,18 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        //
+        // $order->status = 2;
+        // $order->save();
+
+        // return redirect()->route('orders.index');
+    }
+
+     public function cancel($id)
+    {
+        $order = Order::find($id);
+        $order->status = 2;
+        $order->save();
+
+        return redirect()->route('orders.index');
     }
 }
